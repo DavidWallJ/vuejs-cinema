@@ -5,6 +5,25 @@ import genres from './util/genres';
 
 new Vue({
 	el: '#app',
+	data: {
+		genre: [],
+		time: []
+	},
+	methods: {
+		checkFilter(category, title, checked) {
+			if (checked) {
+				this[category].push(title);
+			} else {
+				// check if genre title is in array
+				// if not, index will equal `-1`
+				let index = this[category].indexOf(title);
+				if (index > -1) {
+					// remove one item from array at value assigned to `index`
+					this[category].splice(index, 1);
+				}
+			}
+		}
+	},
 	components: {
 		'movie-list': {
 			template: `<div id="movie-list">
@@ -19,7 +38,8 @@ new Vue({
 						{ title: 'Austin Powers' }
 					]
 				};
-			}
+			},
+			props: {}
 		},
 		'movie-filter': {
 			data() {
@@ -35,8 +55,9 @@ new Vue({
                   </div>
                 </div>`,
 			methods: {
-				checkFilter: function() {
-					console.log('checkfilter');
+				checkFilter: function(category, title, checked) {
+					// re emitting this event so the parent of the parent of `check-filter` (#app) gets the check-filter call
+					this.$emit('check-filter', category, title, checked);
 				}
 			},
 			components: {
@@ -54,7 +75,9 @@ new Vue({
 					methods: {
 						checkFilter() {
 							this.checked = !this.checked;
-							this.$emit('check-filter');
+							//source of check-filter emitter
+							//arguments: category, title, checked
+							this.$emit('check-filter', 'genre', this.title, this.checked);
 						}
 					}
 				}
