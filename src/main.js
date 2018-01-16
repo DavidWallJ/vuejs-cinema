@@ -17,6 +17,14 @@ Object.defineProperty(Vue.prototype, '$moment', {
 	}
 });
 
+// a way of sharing events between components globally
+import { checkFilter } from './util/bus';
+const bus = new Vue();
+Object.defineProperty(Vue.prototype, '$bus', {
+	get() {
+		return this.$root.bus;
+	}
+});
 new Vue({
 	el: '#app',
 	data: {
@@ -24,22 +32,8 @@ new Vue({
 		time: [],
 		movies: [],
 		moment,
-		day: moment()
-	},
-	methods: {
-		checkFilter(category, title, checked) {
-			if (checked) {
-				this[category].push(title);
-			} else {
-				// check if genre title is in array
-				// if not, index will equal `-1`
-				let index = this[category].indexOf(title);
-				if (index > -1) {
-					// remove one item from array at value assigned to `index`
-					this[category].splice(index, 1);
-				}
-			}
-		}
+		day: moment(),
+		bus
 	},
 	components: {
 		MovieList,
@@ -49,5 +43,6 @@ new Vue({
 		this.$http.get('/api').then(response => {
 			this.movies = response.data;
 		});
+		this.$bus.$on('check-filter', checkFilter.bind(this));
 	}
 });

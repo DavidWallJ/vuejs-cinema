@@ -6,20 +6,20 @@
 </template>
 <script>
 export default {
-	data() {
-		return {
-			checked: false
-		};
-	},
-	props: ['title', 'category'],
-	template: ``,
-	methods: {
-		checkFilter() {
-			this.checked = !this.checked;
-			//source of check-filter emitter
-			//arguments: category, title, checked
-			this.$emit('check-filter', this.category, this.title, this.checked);
-		}
-	}
+  data() {
+    return {
+      checked: false
+    };
+  },
+  props: ['title', 'category'],
+  template: ``,
+  methods: {
+    checkFilter() {
+      this.checked = !this.checked;
+      //source of check-filter emitter
+      //arguments: category, title, checked
+      this.$bus.$emit('check-filter', this.category, this.title, this.checked);
+    }
+  }
 };
 </script>

@@ -4,11 +4,11 @@
 <div id="movie-list">
   <!-- if there is a list of filtered movies show them -->
   <div v-if="filteredMovies.length">
-    <movie-item v-for="movie in filteredMovies" v-bind:movie="movie.movie" v-bind:sessions="movie.sessions" v-bind:day="day"></movie-item>
+    <movie-item v-for="movie in filteredMovies" v-bind:movie="movie.movie" v-bind:sessions="movie.sessions" v-bind:day="day" v-bind:time="time"></movie-item>
   </div>
   <!-- no `filteredMovies`, yet `movies` do exist -->
   <div v-else-if="movies.length" class="no-results">
-    No results.
+    {{ noResults }}
   </div>
   <!-- no `filteredMovies` and no `movies` -->
   <div v-else>
@@ -65,6 +65,13 @@ export default {
 			return this.movies
 				.filter(this.movieGenreFilter)
 				.filter(movie => movie.sessions.find(this.sessionPassesTimeFilter));
+		},
+		noResults() {
+			let times = this.time.join(', ');
+			let genres = this.genre.join(', ');
+			return `No results for ${times}${
+				times.length && genres.length ? ', ' : ' '
+			} ${genres}.`;
 		}
 	},
 	components: {

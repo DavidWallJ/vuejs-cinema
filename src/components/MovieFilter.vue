@@ -3,11 +3,11 @@
   <h2>Filter Results</h2>
   <h3>By time of day</h3>
   <div class="filter-group">
-    <check-filter v-for="genre in genres" v-bind:title="genre" v-on:check-filter="checkFilter" category="genre"></check-filter>
+    <check-filter v-for="genre in genres" v-bind:title="genre" category="genre"></check-filter>
   </div>
   <h3>By genre</h3>
   <div class="filter-group">
-    <check-filter v-for="time in times" v-bind:title="time" v-on:check-filter="checkFilter" category="time"></check-filter>
+    <check-filter v-for="time in times" v-bind:title="time" category="time"></check-filter>
   </div>
 </div>
 </template>
@@ -21,13 +21,6 @@ export default {
 			genres,
 			times
 		};
-	},
-	// here we are passing down the genre value as `title` to `check-filter
-	methods: {
-		checkFilter: function(category, title, checked) {
-			// re emitting this event so the parent of the parent of `check-filter` (#app) gets the check-filter call
-			this.$emit('check-filter', category, title, checked);
-		}
 	},
 	components: {
 		CheckFilter

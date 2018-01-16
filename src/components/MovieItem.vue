@@ -17,20 +17,34 @@
 </div>
 </template>
 <script>
+import times from '../util/times';
 export default {
-  props: ['movie', 'sessions', 'day'],
-  methods: {
-    formatSessionTime(raw) {
-      return this.$moment(raw).format('h:mm A');
-    },
-    filteredSessions(sessions) {
-      return sessions.filter(session => {
-        // `isSame` is a moment function
-        // pass in the time string and check if it contains the same day as our `day`
-        // which is the current day passed down from the root component
-        return this.$moment(session.time).isSame(this.day, 'day');
-      });
-    }
-  }
+	props: ['movie', 'sessions', 'day', 'time'],
+	methods: {
+		formatSessionTime(raw) {
+			return this.$moment(raw).format('h:mm A');
+		},
+		filteredSessions(sessions) {
+			return sessions.filter(this.sessionPassesTimeFilter);
+		},
+		sessionPassesTimeFilter(session) {
+			// `day` is today passed down from root component
+			// `session.time` has to be passed into $moment because it's a string
+			// isSame is a `$moment` function
+			if (!this.day.isSame(this.$moment(session.time), 'day')) {
+				return false;
+			} else if (this.time.length === 0 || this.time.length === 2) {
+				// if `before 6` and `after 6` or neither
+				return true;
+				// at this point there can only be one MovieItem
+				// either 'before 6' or `after 6` (18)
+			} else if (this.time[0] === times.AFTER_6PM) {
+				return this.$moment(session.time).hour() >= 18;
+			} else {
+				// times.BEFORE_6PM (18)
+				return this.$moment(session.time).hour() < 18;
+			}
+		}
+	}
 };
 </script>
