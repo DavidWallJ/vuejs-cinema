@@ -4,7 +4,13 @@
 <div id="movie-list">
   <!-- if there is a list of filtered movies show them -->
   <div v-if="filteredMovies.length">
-    <movie-item v-for="movie in filteredMovies" v-bind:movie="movie.movie" v-bind:sessions="movie.sessions" v-bind:day="day" v-bind:time="time"></movie-item>
+    <movie-item v-for="movie in filteredMovies" v-bind:movie="movie.movie">
+      <div class="movie-sessions">
+        <div v-for="session in filteredSessions(movie.sessions)" class="session-time-wrapper">
+          <div class="session-time">{{ formatSessionTime(session.time) }}</div>
+        </div>
+      </div>
+    </movie-item>
   </div>
   <!-- no `filteredMovies`, yet `movies` do exist -->
   <div v-else-if="movies.length" class="no-results">
@@ -26,6 +32,12 @@ export default {
 	// data must be a function that returns values for reusability purposes. A function creats a new instance of the data
 	props: ['genre', 'time', 'movies', 'day'],
 	methods: {
+		formatSessionTime(raw) {
+			return this.$moment(raw).format('h:mm A');
+		},
+		filteredSessions(sessions) {
+			return sessions.filter(this.sessionPassesTimeFilter);
+		},
 		movieGenreFilter(movie) {
 			// if no genres are clicked return all movies
 			if (!this.genre.length) {

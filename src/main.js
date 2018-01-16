@@ -15,7 +15,7 @@ Object.defineProperty(Vue.prototype, '$moment', {
 });
 
 // a way of sharing events between components globally
-import { checkFilter } from './util/bus';
+import { checkFilter, setDay } from './util/bus';
 const bus = new Vue();
 Object.defineProperty(Vue.prototype, '$bus', {
 	get() {
@@ -43,6 +43,7 @@ new Vue({
 			this.movies = response.data;
 		});
 		this.$bus.$on('check-filter', checkFilter.bind(this));
+		this.$bus.$on('set-day', setDay.bind(this));
 	},
 	router
 });
