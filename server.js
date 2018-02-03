@@ -48,5 +48,3 @@ app.listen(process.env.PORT, function() {
 		require('open')(`http://localhost:${process.env.PORT}`);
 	}
 });
-
-// https://davidjwall-vue-js-cinema.herokuapp.com/
